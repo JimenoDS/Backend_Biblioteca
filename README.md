@@ -66,5 +66,14 @@ Títulos	/titulos	Relacionado con Profesores.
 Asignaciones	/profesor-materia	Gestiona la relación N:M entre Profesores y Materias.
 Inscripciones	/inscripciones	Gestiona la relación N:M entre Estudiantes y Materias. 
 
+### Pruebas con Postman
+La colección de Postman con todas las pruebas funcionales se encuentra en el documento Pruebas API-biblioteca.postman_collection.json, incluido en el repositorio.
 
+Instrucciones:
+
+Abre Postman.
+
+Haz clic en Import.
+
+Selecciona el archivo Pruebas API-biblioteca.postman_collection.json para cargar la colección completa.
 
