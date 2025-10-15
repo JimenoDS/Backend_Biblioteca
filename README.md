@@ -1,98 +1,70 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API para Sistema de Gestión Universitaria (NestJS + Prisma)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📖 Descripción del Proyecto
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Esta es una API RESTful construida con **NestJS** y **Prisma ORM**, diseñada para gestionar las entidades y relaciones de un sistema universitario. La arquitectura sigue un diseño modular y desacoplado, garantizando escalabilidad y mantenibilidad.
 
-## Description
+La API maneja operaciones CRUD para todas las entidades principales y gestiona relaciones complejas como **uno a muchos** (Profesor -> Títulos) y **muchos a muchos** (Profesores <-> Materias, Estudiantes <-> Materias).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## ✨ Características Principales
 
-```bash
-$ npm install
-```
+Este proyecto cumple con los criterios de excelencia de la evaluación a través de las siguientes características:
 
-## Compile and run the project
+* **Diseño Modular y Escalable:** Cada recurso (Estudiantes, Profesores, etc.) está encapsulado en su propio módulo. Se utiliza un `PrismaModule` centralizado que es importado por los demás módulos, promoviendo el bajo acoplamiento y la reutilización de código.
 
-```bash
-# development
-$ npm run start
+* **CRUD Completo por Reccurso:** Todos los endpoints principales implementan las operaciones `GET` (listado y por ID), `POST`, `PATCH` y `DELETE`.
 
-# watch mode
-$ npm run start:dev
+* **Validación Robusta de Datos (DTOs):** Se utiliza `class-validator` en los DTOs para asegurar la integridad de los datos de entrada (ej. formato de email, longitud de cédula, tipos de datos numéricos).
 
-# production mode
-$ npm run start:prod
-```
+* **Manejo Avanzado de Errores:** El servicio responde con códigos de estado HTTP semánticos y mensajes claros, manejando explícitamente los errores de Prisma:
+    * **`P2002` (Unique Constraint):** Devuelve `409 Conflict` si se intenta crear un registro duplicado (ej. un estudiante ya inscrito en una materia).
+    * **`P2003` (Foreign Key Constraint):** Devuelve `404 Not Found` si se intenta crear una relación con un ID que no existe.
+    * **`404 Not Found`:** Se maneja en las búsquedas por ID (`findOne`) cuando el recurso no existe.
 
-## Run tests
+* **Relaciones Complejas Implementadas:**
+    * **Creación Anidada (1:N):** El endpoint `POST /profesores` permite crear un profesor y sus títulos asociados en una sola transacción.
+    * **Tablas Pivote (N:M):** Se gestionan las relaciones `ProfesorMateria` e `Inscripcion` a través de sus propios módulos para asignar y desasignar entidades.
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## 🚀 Instalación y Puesta en Marcha
 
-# test coverage
-$ npm run test:cov
-```
+Sigue estos pasos para configurar y ejecutar el proyecto localmente.
 
-## Deployment
+### 1. Requisitos Previos
+* Node.js (v18 o superior)
+* Git
+* PostgreSQL
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Instalar Dependencias
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+npm install
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+### Configurar Variables de Entorno
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+DATABASE_URL="postgresql://postgres:Dontaquito.28@localhost:5432/sistema_u"
 
-## Resources
+### Ejecutar las Migraciones de la Base de Datos
 
-Check out a few resources that may come in handy when working with NestJS:
+npx prisma migrate dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Iniciar el Servidor
 
-## Support
+npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### API Endpoints
 
-## Stay in touch
+Recurso	Ruta Base	Notas
+Estudiantes	/estudiantes	CRUD completo.
+Profesores	/profesores	Soporta creación anidada de Títulos.
+Carreras	/carreras	CRUD completo.
+Aulas	/aulas	CRUD completo.
+Materias	/materias	Relacionado con Carreras y Aulas.
+Títulos	/titulos	Relacionado con Profesores.
+Asignaciones	/profesor-materia	Gestiona la relación N:M entre Profesores y Materias.
+Inscripciones	/inscripciones	Gestiona la relación N:M entre Estudiantes y Materias. 
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
