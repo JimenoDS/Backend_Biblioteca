@@ -1,4 +1,3 @@
-// src/modulos/estudiantes/estudiantes.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
@@ -44,4 +43,20 @@ export class EstudiantesService {
     
     return estudiante;
   }
+
+  async update(id: number, dto: CreateEstudianteDto) {
+    await this.findOne(id);
+    return this.prisma.estudiante.update({
+      where: { id_estudiante: id },
+      data: dto,
+    });
+  }
+async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.estudiante.delete({
+      where: { id_estudiante: id },
+    });
+  }
+
 }
+

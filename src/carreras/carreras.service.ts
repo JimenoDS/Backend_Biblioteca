@@ -1,5 +1,3 @@
-// src/modulos/carreras/carreras.service.ts
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarreraDto } from './dto/create-carrera.dto';
 import { UpdateCarreraDto } from './dto/update-carrera.dto';
@@ -9,13 +7,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CarrerasService {
   constructor(private prisma: PrismaService) {}
 
-  create(createCarreraDto: CreateCarreraDto) {
+  async create(createCarreraDto: CreateCarreraDto) {
     return this.prisma.carrera.create({
       data: createCarreraDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.carrera.findMany();
   }
 
@@ -30,7 +28,7 @@ export class CarrerasService {
     return carrera;
   }
 
-  update(id: number, updateCarreraDto: UpdateCarreraDto) {
+  async update(id: number, updateCarreraDto: UpdateCarreraDto) {
     return this.prisma.carrera.update({
       where: { id_carrera: id },
       data: updateCarreraDto,
@@ -38,7 +36,7 @@ export class CarrerasService {
   }
 
   async remove(id: number) {
-    await this.findOne(id); // Reutilizamos findOne para verificar si existe
+    await this.findOne(id);
     return this.prisma.carrera.delete({
       where: { id_carrera: id },
     });
